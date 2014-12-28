@@ -21,7 +21,7 @@ The following command invokes localproxy.
 
 ::
 
-    $ python2.7 -m localproxy
+    $ python2.7 -m localproxy.main
 
 
 By default, Localproxy wait connection at port 8080. You can change your proxy setting of Web browser to ``localhost:8080``.
