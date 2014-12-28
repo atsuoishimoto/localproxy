@@ -149,10 +149,11 @@ if __name__ == '__main__':
     factory.protocol = LocalFileProxy
     twisted.internet.reactor.listenTCP(8080, factory)
 
-    resource = LocalDirs()
-    factory = Site(resource)
-    twisted.internet.reactor.listenSSL(8081, factory, 
-        twisted.internet.ssl.DefaultOpenSSLContextFactory(
-            'privkey.pem', 'cacert.pem'))
+    if os.path.exists('privkey.pem'):
+        resource = LocalDirs()
+        factory = Site(resource)
+        twisted.internet.reactor.listenSSL(8081, factory, 
+            twisted.internet.ssl.DefaultOpenSSLContextFactory(
+                'privkey.pem', 'cacert.pem'))
 
     twisted.internet.reactor.run()
