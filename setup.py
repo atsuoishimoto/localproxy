@@ -1,12 +1,15 @@
 import os, sys
 from setuptools import setup, find_packages
 
+def read(fname):
+    return open(
+            os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
     name = "localproxy",
-    version = "0.0.1",
+    version = "0.0.2",
     description='HTTP proxy server in twisted. If there is a directory with same name as target host(e.g. www.example.com), contents of the directoy are returned instead of requesting to target host.',
-    url='https://github.com/atsuoishimoto/localproxy'
+    url='https://github.com/atsuoishimoto/localproxy',
     author='Atsuo Ishimoto',
     author_email='ishimoto@gembook.org',
     long_description=read('README.rst'),

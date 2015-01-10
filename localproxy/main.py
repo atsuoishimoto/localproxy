@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 
-
 import urlparse, os, copy
-
+from urllib import unquote
 from twisted.web.http import HTTPFactory
 from twisted.web.server import Site, NOT_DONE_YET
 from twisted.web import resource
@@ -33,17 +32,30 @@ def _split_host(uri):
 class LocalDirs(Resource):
     def __init__(self):
         Resource.__init__(self)
-        self.localsites = {}
 
     def getChild(self, path, request):
         host = request.getHeader('Host')
         localpath = os.path.join(os.getcwd(), host)
-        rsrc = File(localpath)
 
         url = urlparse.urlparse(request.uri)
-        path = url.path.lstrip('/')
-        return rsrc.getChild(path, request)
+        path = os.path.join(localpath, url.path.lstrip('/'))
 
+        if url.query:
+            arg = path + '?' + url.query
+            if os.path.exists(arg):
+                path = arg
+
+        if os.path.isdir(path):
+            index = os.path.join(path, 'index.html')
+            if os.path.exists(index):
+                path = index
+
+        print 'path:', path
+
+        path, last = os.path.split(path)
+        ret = File(path).getChild(last, request)
+        ret.isLeaf = True
+        return ret
 
 class ConnectToClient(Protocol):
     income = None
@@ -74,7 +86,8 @@ class ConnectToClientFactory(ClientFactory):
 
 class LocalFileProxyRequest(ProxyRequest):
     def process(self):
-        print(self.uri)
+        print 'uri:', self.uri
+
         host, port = _split_host(self.uri)
         localpath = os.path.join(os.getcwd(), host)
 
@@ -99,12 +112,8 @@ class LocalFileProxyRequest(ProxyRequest):
         self.reactor.connectTCP('localhost', 8081, clientFactory)
 
     def process_local(self, localpath):
-        rsrc = File(localpath)
-        url = urlparse.urlparse(self.uri)
-        path = url.path.lstrip('/')
-        file = rsrc.getChild(path, self)
+        file = LocalDirs().getChild(None, self)
         body = file.render(self)
-
         if body == NOT_DONE_YET:
             return
 
@@ -150,8 +159,8 @@ if __name__ == '__main__':
     twisted.internet.reactor.listenTCP(8080, factory)
 
     if os.path.exists('privkey.pem'):
-        resource = LocalDirs()
-        factory = Site(resource)
+        rsrc = LocalDirs()
+        factory = Site(rsrc)
         twisted.internet.reactor.listenSSL(8081, factory, 
             twisted.internet.ssl.DefaultOpenSSLContextFactory(
                 'privkey.pem', 'cacert.pem'))
