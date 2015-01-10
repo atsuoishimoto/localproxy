@@ -151,9 +151,7 @@ class LocalFileProxy(Proxy):
             Proxy.dataReceived(self, data)
 
 
-
-if __name__ == '__main__':
-
+def main():
     factory = HTTPFactory()
     factory.protocol = LocalFileProxy
     twisted.internet.reactor.listenTCP(8080, factory)
@@ -166,3 +164,7 @@ if __name__ == '__main__':
                 'privkey.pem', 'cacert.pem'))
 
     twisted.internet.reactor.run()
+
+
+if __name__ == '__main__':
+    main()
