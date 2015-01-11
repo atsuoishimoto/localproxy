@@ -9,9 +9,7 @@ Install
 
 ::
 
-    $ git clone https://github.com/atsuoishimoto/localproxy
-    $ cd localproxy
-    $ python2.7 setup.py install
+    $ pip install localproxy
 
 
 Usage
@@ -21,7 +19,7 @@ The following command invokes localproxy.
 
 ::
 
-    $ python2.7 -m localproxy.main
+    $ localproxy
 
 
 By default, Localproxy listens for connections at port 8080. You can change the proxy setting of your Web browser to ``localhost:8080``.
