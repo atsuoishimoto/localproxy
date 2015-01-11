@@ -21,4 +21,8 @@ setup(
     license='MIT License',
     install_requires=['twisted', 'PyOpenSSL', 'service_identity'],
     packages = find_packages(),
+    entry_points = """\
+      [console_scripts]
+      localproxy = localproxy.main:main
+    """,
 )
