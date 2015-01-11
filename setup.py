@@ -7,8 +7,8 @@ def read(fname):
 
 setup(
     name = "localproxy",
-    version = "0.0.2",
-    description='HTTP proxy server in twisted. If there is a directory with same name as target host(e.g. www.example.com), contents of the directoy are returned instead of requesting to target host.',
+    version = "0.0.3",
+    description="HTTP proxy server in twisted. If there is a directory with same name as target host (e.g.: www.example.com), contents of the directory are returned instead of making a request to the target host.",
     url='https://github.com/atsuoishimoto/localproxy',
     author='Atsuo Ishimoto',
     author_email='ishimoto@gembook.org',
